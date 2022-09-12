@@ -82,7 +82,7 @@ def hello_world(request):
 
     output_text = ','.join(fields) + '\n'
 
-    year = "2021"
+    year = "2020"
 
     for account in report_data:
 
@@ -94,6 +94,13 @@ def hello_world(request):
 
         address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
+
+        # batch field - TODO
+        batch = ''
+        if account['obligations'][0]['settlement'] == 'P':
+            batch = ''
+        if account['obligations'][0]['settlement'] == 'E':
+            batch = ''
 
         row_data = [
         # Municipality: Code Is determined by the first 2 digits of the Account Number 
@@ -117,9 +124,8 @@ def hello_world(request):
         # Payment Type: Is “P”. Indicates the that the Amount Due is in the penalty phase.
         'P',
         # crock_school_data[account_key]['Comments'],
-        # Not sure what comments should go here
         # also need to escape them so they show up on a single column and line
-        'blank comments for now'
+        crock_school_data[account_key]['TotalAmtDue']
         ]
 
         output_data.append(row_data)
