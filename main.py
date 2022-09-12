@@ -1,7 +1,23 @@
 import requests
 import json
+import csv
+
 
 def hello_world(request):
+
+    crock_raw_data = None
+
+    with open('councilrock_2021.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        crock_raw_data = list(reader)
+
+    crock_school_data = {}
+    for entry in crock_raw_data:
+        entry_key = entry['Year'] + '-' + entry['Account']
+        crock_school_data[entry_key] = entry
+
+#    return json.dumps(crock_school_data)
+
 
     session = requests.Session()
     loginUrl = 'http://tomsdev.jonnou.net/accounts/login/'
@@ -31,7 +47,7 @@ def hello_world(request):
     if session == None or headers == None:
             return 'Empty header or session object returned from login attempt'
 
-    getReportUrl = 'http://tomsdev.jonnou.net/rest/job-data/4866/'
+    getReportUrl = 'http://tomsdev.jonnou.net/rest/job-data/4992/'
 
     try:
         response = session.get(getReportUrl, headers= headers)
@@ -59,7 +75,6 @@ def hello_world(request):
         'Amount Due',
         'Payment Type',
         'Comment',
-        'TaxYear',        
     ]
 
     output_data = []
@@ -67,7 +82,11 @@ def hello_world(request):
 
     output_text = ','.join(fields) + '\n'
 
+    year = "2021"
+
     for account in report_data:
+        account_key = year + "-" + account['accountNumber']
+
         address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
@@ -79,16 +98,16 @@ def hello_world(request):
         city[0],
         city[1],
         city[2],
-        '--Occupational Code--',
-        '--Occupational Value--',
+        crock_school_data[account_key]['OccCode'],
+        crock_school_data[account_key]['OccValue'],
         '--Bill Type--',
         '--Action Code--',
         '--Batch--',
         '--Amount Due--',
         '--Payment Type--',
-        '--Comment--',
-        '--TaxYear--',
+        crock_school_data[account_key]['Comments'],
         ]
+
         output_data.append(row_data)
         output_text += ','.join(row_data)
         output_text += '\n'
