@@ -89,6 +89,9 @@ def hello_world(request):
 
         account_key = year + "-" + account['accountNumber']
 
+        # print line data
+        print(str(crock_school_data[account_key]))
+
         address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
@@ -113,7 +116,10 @@ def hello_world(request):
         crock_school_data[account_key]['TotalAmtDue'],
         # Payment Type: Is “P”. Indicates the that the Amount Due is in the penalty phase.
         'P',
-        crock_school_data[account_key]['Comments'],
+        # crock_school_data[account_key]['Comments'],
+        # Not sure what comments should go here
+        # also need to escape them so they show up on a single column and line
+        'blank comments for now'
         ]
 
         output_data.append(row_data)
