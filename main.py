@@ -85,13 +85,16 @@ def hello_world(request):
     year = "2021"
 
     for account in report_data:
+
+
         account_key = year + "-" + account['accountNumber']
 
         address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
         row_data = [
-        '--Municipality Code--',
+        # Municipality: Code Is determined by the first 2 digits of the Account Number 
+        account['accountNumber'][:2],
         account['accountNumber'],
         account['obligor']['fullName'],
         address1,
@@ -100,11 +103,16 @@ def hello_world(request):
         city[2],
         crock_school_data[account_key]['OccCode'],
         crock_school_data[account_key]['OccValue'],
-        '--Bill Type--',
-        '--Action Code--',
+        # Bill Type: Always defaults to the letter “O” (occupation)
+        'O',
+        # Action Code: Will be the letter “A”, when we send the account on report as paid
+        'A' if account['obligations'][0]['settlement'] == 'P' else '',
+        # Batch: Is blank until the obligor goes on report. It’s the report date “HMMYY”
         '--Batch--',
-        '--Amount Due--',
-        '--Payment Type--',
+        # Original amount due from the file
+        crock_school_data[account_key]['TotalAmtDue'],
+        # Payment Type: Is “P”. Indicates the that the Amount Due is in the penalty phase.
+        'P',
         crock_school_data[account_key]['Comments'],
         ]
 
