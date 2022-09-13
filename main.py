@@ -103,12 +103,10 @@ def hello_world(request):
 #        address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
-        # batch field - TODO
+        # batch field - the actual batch value should come as an input to the function
         batch = ''
-        if account['obligations'][0]['settlement'] == 'P':
-            batch = ''
-        if account['obligations'][0]['settlement'] == 'E':
-            batch = ''
+        if account['obligations'][0]['settlement'] in ('P','E'):
+            batch = '0922'
 
         row_data = [
         # Municipality: Code Is determined by the first 2 digits of the Account Number 
@@ -126,13 +124,12 @@ def hello_world(request):
         # Action Code: Will be the letter “A”, when we send the account on report as paid
         'A' if account['obligations'][0]['settlement'] == 'P' else '',
         # Batch: Is blank until the obligor goes on report. It’s the report date “HMMYY”
-        '--Batch--',
+        batch,
         # Original amount due from the file
         crock_school_data[account_key]['TotalAmtDue'],
         # Payment Type: Is “P”. Indicates the that the Amount Due is in the penalty phase.
         'P',
-        # crock_school_data[account_key]['Comments'],
-        # also need to escape them so they show up on a single column and line
+        # orginal comment line from file 
         crock_school_data[account_key]['Comments']
         ]
 
