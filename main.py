@@ -106,7 +106,7 @@ def hello_world(request):
         # batch field - the actual batch value should come as an input to the function
         batch = ''
         if account['obligations'][0]['settlement'] in ('P','E'):
-            batch = '0922'
+            batch = 'H0922'
 
         row_data = [
         # Municipality: Code Is determined by the first 2 digits of the Account Number 
