@@ -4,6 +4,20 @@ import csv
 
 
 def crock_csv_generator(request):
+    request_args = request.args
+    
+    if request_args and 'batch' in request_args:
+        batch = request_args['batch']
+    else:
+        batch = None
+
+    if request_args and 'jobid' in request_args:
+        job_id = request_args['jobid']
+    else:
+        job_id = None
+
+    if job_id == None or batch == None:
+        return "bad or missing input parameters"
 
     crock_raw_data = None
 
@@ -15,8 +29,6 @@ def crock_csv_generator(request):
     for entry in crock_raw_data:
         entry_key = entry['Year'] + '-' + entry['Account']
         crock_school_data[entry_key] = entry
-
-#    return json.dumps(crock_school_data)
 
 
     session = requests.Session()
@@ -47,7 +59,7 @@ def crock_csv_generator(request):
     if session == None or headers == None:
             return 'Empty header or session object returned from login attempt'
 
-    getReportUrl = 'http://tomsdev.jonnou.net/rest/job-data/5161/'
+    getReportUrl = 'http://tomsdev.jonnou.net/rest/job-data/' + job_id + '/'
 
     try:
         response = session.get(getReportUrl, headers= headers)
@@ -57,7 +69,10 @@ def crock_csv_generator(request):
     if response.status_code not in [200, 302, 301]:
         return 'Error code returned retrieving report data'
 
-    report_data = json.loads(response.text)
+    job_data = json.loads(response.text)
+
+    tax_year = str(job_data['job']['taxYear'])
+    report_data = job_data['accounts']
 
     fields = [
         'Municipality Code',
@@ -82,12 +97,10 @@ def crock_csv_generator(request):
 
     output_text = ','.join(fields) + '\n'
 
-    year = "2021"
-
     for account in report_data:
 
 
-        account_key = year + "-" + account['accountNumber']
+        account_key = tax_year + "-" + account['accountNumber']
 
         address_list = account['address'].split('\n')
 
@@ -104,10 +117,6 @@ def crock_csv_generator(request):
         city = address2.split(None,3)
 
         # batch field - the actual batch value should come as an input to the function
-        batch = ''
-        if account['obligations'][0]['settlement'] in ('P','E'):
-            batch = 'H0922'
-
         row_data = [
         # Municipality: Code Is determined by the first 2 digits of the Account Number 
         account['accountNumber'][:2],
@@ -123,8 +132,8 @@ def crock_csv_generator(request):
         'O',
         # Action Code: Will be the letter “A”, when we send the account on report as paid
         'A' if account['obligations'][0]['settlement'] == 'P' else '',
-        # Batch: Is blank until the obligor goes on report. It’s the report date “HMMYY”
-        batch,
+        # Batch: It’s the report date “HMMYY”
+        'H' + batch,
         # Original amount due from the file
         crock_school_data[account_key]['TotalAmtDue'],
         # Payment Type: Is “P”. Indicates the that the Amount Due is in the penalty phase.
@@ -133,7 +142,7 @@ def crock_csv_generator(request):
         crock_school_data[account_key]['Comments']
         ]
 
-# wrap row data in quotes
+        # wrap row data in quotes
         formatted_row = []
         for element in row_data:
             formatted_row.append('"' + element + '"')
