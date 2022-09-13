@@ -139,7 +139,7 @@ def hello_world(request):
 # wrap row data in quotes
         formatted_row = []
         for element in row_data:
-            formatted_row.push('"' + element + '"')
+            formatted_row.append('"' + element + '"')
         output_text += ','.join(formatted_row)
         output_text += '\n'
 
