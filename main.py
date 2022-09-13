@@ -3,7 +3,7 @@ import json
 import csv
 
 
-def hello_world(request):
+def crock_csv_generator(request):
 
     crock_raw_data = None
 
