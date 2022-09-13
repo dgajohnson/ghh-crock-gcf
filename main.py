@@ -92,7 +92,21 @@ def hello_world(request):
         # print line data
         print(str(crock_school_data[account_key]))
 
-        address1, address2 = account['address'].split('\n')
+        address_list = account['address'].split('\n')
+
+        address = ''
+        city = ''
+        if len(address_list) == 2:
+            address1 = address_list[0]
+            address2 = address_list[1]
+        else:
+            address1 = ' '.join(address_list[:2])
+            address2 = address_list[3]
+
+        print(address1)
+        print(address2)
+        
+#        address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
         # batch field - TODO
