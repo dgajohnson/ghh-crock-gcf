@@ -89,9 +89,6 @@ def hello_world(request):
 
         account_key = year + "-" + account['accountNumber']
 
-        # print line data
-        print(str(crock_school_data[account_key]))
-
         address_list = account['address'].split('\n')
 
         address = ''
@@ -103,9 +100,6 @@ def hello_world(request):
             address1 = ' '.join(address_list[:2])
             address2 = address_list[3]
 
-        print(address1)
-        print(address2)
-        
 #        address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
@@ -139,12 +133,14 @@ def hello_world(request):
         'P',
         # crock_school_data[account_key]['Comments'],
         # also need to escape them so they show up on a single column and line
-        crock_school_data[account_key]['TotalAmtDue']
+        crock_school_data[account_key]['Comment']
         ]
 
-        output_data.append(row_data)
-        output_text += ','.join(row_data)
+# wrap row data in quotes
+        formatted_row = []
+        for element in row_data:
+            formatted_row.push('"' + element + '"')
+        output_text += ','.join(formatted_row)
         output_text += '\n'
 
-#    return json.dumps(output_data)
     return output_text
