@@ -133,7 +133,7 @@ def hello_world(request):
         'P',
         # crock_school_data[account_key]['Comments'],
         # also need to escape them so they show up on a single column and line
-        crock_school_data[account_key]['Comment']
+        crock_school_data[account_key]['Comments']
         ]
 
 # wrap row data in quotes
