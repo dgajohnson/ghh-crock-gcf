@@ -130,6 +130,7 @@ def crock_csv_generator(request):
         account['accountNumber'],
         account['obligor']['fullName'],
         address1,
+        # generate city, state and zip
         ' '.join(city[:len(city) - 2]),
         city[-2],
         city[-1],
