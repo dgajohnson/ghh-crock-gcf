@@ -130,9 +130,9 @@ def crock_csv_generator(request):
         account['accountNumber'],
         account['obligor']['fullName'],
         address1,
-        city[0],
-        city[1],
-        city[2],
+        city[:len(city) - 2],
+        city[-2],
+        city[-1],
         crock_school_data[account_key]['OccCode'],
         crock_school_data[account_key]['OccValue'],
         # Bill Type: Always defaults to the letter “O” (occupation)
