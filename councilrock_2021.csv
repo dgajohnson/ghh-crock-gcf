@@ -1,4 +1,4 @@
-Year,Account,Name,Address1,City,State,Zip,OccCode,OccValue, OccBalDue , TotalAmtDue ,Comments
+Year,Account,Name,Address1,City,State,Zip,OccCode,OccValue,OccBalDue,TotalAmtDue,Comments
 2020,2800057,"BAUMAN, KRIS",309 E WASHINGTON AVE,NEWTOWN,PA,18940,286,600, $ 240.00 , $ 240.00 ,
 2020,2800386,"GORDON, MARLOW E",136 N STATE STREET,NEWTOWN,PA,18940,297,400, $ 160.00 , $ 160.00 ,3/31/08-EXON
 2020,2800404,"GILLIS, CAROL J",525 E CENTER AVE,NEWTOWN,PA,18940,150,350, $ 140.00 , $ 140.00 ,1/17/20 adv amount due
