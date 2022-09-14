@@ -99,8 +99,17 @@ def crock_csv_generator(request):
 
     for account in report_data:
 
+        # only process accounts in Paid state
+        if account['state'] != 'PD':
+            print('INFO: skipping non paid account: ' + account['accountNumber'])
+            continue
 
         account_key = tax_year + "-" + account['accountNumber']
+
+        # check for input record for this account and year
+        if account_key not in crock_school_data:
+            print("WARNING: Account not in input file: " + account_key)
+            continue
 
         address_list = account['address'].split('\n')
 
@@ -113,7 +122,6 @@ def crock_csv_generator(request):
             address1 = ' '.join(address_list[:2])
             address2 = address_list[3]
 
-#        address1, address2 = account['address'].split('\n')
         city = address2.split(None,3)
 
         # batch field - the actual batch value should come as an input to the function
