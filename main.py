@@ -101,7 +101,6 @@ def crock_csv_generator(request):
 
         # only process accounts in Paid state
         if account['state'] != 'PD':
-            print('INFO: skipping non paid account: ' + account['accountNumber'])
             continue
 
         account_key = tax_year + "-" + account['accountNumber']
